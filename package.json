@@ -1,0 +1,17 @@
+{
+  "name": "simple-http-reverse-proxy",
+  "version": "1.0.0",
+  "description": "Simple HTTP Reverse Proxy",
+  "scripts": {
+    "start": "node ./app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wchang28/simple-http-reverse-proxy.git"
+  },
+  "author": "Wen Chang",
+  "license": "MIT",
+  "dependencies": {
+    "http-proxy": "^1.17.0"
+  }
+}
