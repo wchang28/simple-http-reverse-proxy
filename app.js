@@ -1,3 +1,8 @@
+// can use the following env. vars. to control the reverse proxy
+// 1. PORT
+// 2. PROXY_TARGET
+// 3. SSL_PRIVATE_KEY
+// 4. SSL_FULLCHAIN_CERT
 const httpProxy = require('http-proxy');
 const fs = require('fs');
 
@@ -18,12 +23,12 @@ let options = {
 	,xfwd: true
 };
 
-let secure = (process.env.SSL_PRIVATE_KEY && process.env.SSL_CERTIFICATE ? true : false);
+let secure = (process.env.SSL_PRIVATE_KEY && process.env.SSL_FULLCHAIN_CERT ? true : false);
 
 if (secure) {
 	options.ssl = {
 		key: fs.readFileSync(process.env.SSL_PRIVATE_KEY, 'utf8')
-		,cert: fs.readFileSync(process.env.SSL_CERTIFICATE, 'utf8')		
+		,cert: fs.readFileSync(process.env.SSL_FULLCHAIN_CERT, 'utf8')		
 	};
 }
 
@@ -32,7 +37,7 @@ httpProxy.createServer(options)
 	if (err) {
 		console.error(`${new Date().toISOString()}: !!! Error: ${JSON.stringify(err)} !!!`);
 	} else {
-		console.log(`${new Date().toISOString()}: server is listening on port ${port}, protocol=${secure? "https": "http"}`);
+		console.log(`${new Date().toISOString()}: reverse proxy is listening on port ${port}, protocol=${secure? "https": "http"}`);
 	}
 }).on("error", (err) => {
 	console.error(`${new Date().toISOString()}: !!! Error: ${JSON.stringify(err)} !!!`);
