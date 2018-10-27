@@ -1,8 +1,8 @@
 // can use the following env. vars. to control the reverse proxy
-// 1. PORT
-// 2. PROXY_TARGET
-// 3. SSL_PRIVATE_KEY
-// 4. SSL_FULLCHAIN_CERT
+// 1. PROXY_TARGET (required)
+// 2. PORT (optional)
+// 3. SSL_PRIVATE_KEY (optional)
+// 4. SSL_FULLCHAIN_CERT (optional)
 const httpProxy = require('http-proxy');
 const fs = require('fs');
 
@@ -21,6 +21,7 @@ let options = {
 	target
 	,changeOrigin: true
 	,xfwd: true
+	,ws: true
 };
 
 let secure = (process.env.SSL_PRIVATE_KEY && process.env.SSL_FULLCHAIN_CERT ? true : false);
