@@ -1,12 +1,14 @@
 // can use the following env. vars. to control the reverse proxy
 // 1. PROXY_TARGET (required)
 // 2. PORT (optional)
-// 3. SSL_PRIVATE_KEY (optional)
-// 4. SSL_FULLCHAIN_CERT (optional)
+// 3. HOSTNAME {optional}
+// 4. SSL_PRIVATE_KEY (optional)
+// 5. SSL_FULLCHAIN_CERT (optional)
 const httpProxy = require('http-proxy');
 const fs = require('fs');
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 8080;
+const hostname = process.env.HOSTNAME || "0.0.0.0";
 const target = process.env.PROXY_TARGET;
 
 if (!target) {
@@ -14,8 +16,8 @@ if (!target) {
 	process.exit(1);
 }
 
-console.log(`${new Date().toISOString()}: listening port=${port}`);
-console.log(`${new Date().toISOString()}: target=${target}`);
+console.log(`[${new Date().toISOString()}]: listening on ${hostname}:${port}`);
+console.log(`[${new Date().toISOString()}]: target=${target}`);
 
 let options = {
 	target
@@ -34,14 +36,14 @@ if (secure) {
 }
 
 httpProxy.createServer(options)
-.listen(port, (err) => {
+.listen(port, hostname, (err) => {
 	if (err) {
-		console.error(`${new Date().toISOString()}: !!! Error: ${JSON.stringify(err)} !!!`);
+		console.error(`[${new Date().toISOString()}]: !!! Error: ${JSON.stringify(err)} !!!`);
 	} else {
-		console.log(`${new Date().toISOString()}: reverse proxy is listening on port ${port}, protocol=${secure? "https": "http"}`);
+		console.log(`[${new Date().toISOString()}]: reverse proxy is listening on ${hostname}:${port}, protocol=${secure? "https": "http"}, proxy-target=${target}`);
 	}
 }).on("error", (err) => {
-	console.error(`${new Date().toISOString()}: !!! Error: ${JSON.stringify(err)} !!!`);
+	console.error(`[${new Date().toISOString()}]: !!! Error: ${JSON.stringify(err)} !!!`);
 }).on("proxyReq", (proxyReq, req, res, options) => {
-	console.log(`${new Date().toISOString()}: incoming request, url=${req.url}`);
+	console.log(`[${new Date().toISOString()}]: incoming request, url=${req.url}`);
 });
