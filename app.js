@@ -1,14 +1,14 @@
 // can use the following env. vars. to control the reverse proxy
 // 1. PROXY_TARGET (required)
 // 2. PORT (optional)
-// 3. HOSTNAME {optional}
+// 3. HOST {optional}
 // 4. SSL_PRIVATE_KEY (optional)
 // 5. SSL_FULLCHAIN_CERT (optional)
 const httpProxy = require('http-proxy');
 const fs = require('fs');
 
 const port = process.env.PORT || 8080;
-const hostname = process.env.HOSTNAME || "0.0.0.0";
+const hostname = process.env.HOST || "0.0.0.0";
 const target = process.env.PROXY_TARGET;
 
 if (!target) {
@@ -17,7 +17,7 @@ if (!target) {
 }
 
 console.log(`[${new Date().toISOString()}]: listening on ${hostname}:${port}`);
-console.log(`[${new Date().toISOString()}]: target=${target}`);
+console.log(`[${new Date().toISOString()}]: proxy target=${target}`);
 
 let options = {
 	target
